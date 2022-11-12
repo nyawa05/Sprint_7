@@ -1,4 +1,4 @@
-package testclasses;
+package pojo;
 
 public class Credentials {
     public String getLogin() {

@@ -3,56 +3,42 @@ import io.qameta.allure.junit4.DisplayName;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+import services.CourierGenerator;
 import services.CourierRequests;
-import testclasses.*;
+import pojo.*;
 
 public class CreateCourierTest {
-    Courier courier = new Courier("tamarka666","12345678","Tamara");
+    Courier courier = CourierGenerator.randomCourier();
+    CourierRequests courierRequests = new CourierRequests();
 
     @Test
-    @DisplayName("Check status code of creating courier")
-    @Description("Check correct status code (201) when create new courier. Positive test.")
-    public void createCourierPositiveTestGetStatusCode () {
-        CourierRequests.createCourier(courier)
-                .then().statusCode(201);
+    @DisplayName("Positive check of creating courier")
+    @Description("Check correct status code (201) and OK message when create new courier. Positive test.")
+    public void createCourierPositiveTest () {
+        String actual = courierRequests.createCourier(courier)
+                .then().statusCode(201).extract().path("ok").toString();
+        Assert.assertEquals("true", actual);
     }
     @Test
-    @DisplayName("Check status code of creating courier")
-    @Description("Check correct status code (201) when create new courier with only required fields. Positive test.")
-    public void createCourierPositiveTestAllNecessaryFieldsGetStatusCode () {
+    @DisplayName("Positive check of creating courier")
+    @Description("Check correct status code (201) and OK message when create new courier with only required fields. Positive test.")
+    public void createCourierPositiveTestAllNecessaryFields() {
         courier.setFirstName("");
-        CourierRequests.createCourier(courier)
-                .then().statusCode(201);
+        String actual = courierRequests.createCourier(courier)
+                .then().statusCode(201).extract().path("ok").toString();
+        Assert.assertEquals("true", actual);;
     }
     @Test
-    @DisplayName("Check message of creating courier")
-    @Description("Check correct message when create new courier. Positive test.")
-    public void createCourierPositiveTestGetMessage () {
-        CourierOkMessage courierOkMessage = CourierRequests.createCourier(courier)
-                .body()
-                .as(CourierOkMessage.class);
-        Assert.assertTrue(courierOkMessage.isOk());
-    }
-    @Test
-    @DisplayName("Check status code of creating courier")
-    @Description("Check correct status code (409) when create new courier with existing login")
-    public void createCourierNegativeTestDoubleValuesGetStatusCode() {
-        CourierRequests.createCourier(courier);
-        CourierRequests.createCourier(courier)
-                .then().statusCode(409);
-    }
-    @Test
-    @DisplayName("Check message of creating courier")
-    @Description("Check correct message when create new courier with existing login")
-    public void createCourierNegativeTestDoubleValuesGetMessage() {
-        CourierRequests.createCourier(courier);
-        CourierNotOkMessage courierNotOkMessage = CourierRequests.createCourier(courier)
-                .body()
-                .as(CourierNotOkMessage.class);
-        Assert.assertEquals("Этот логин уже используется. Попробуйте другой.", courierNotOkMessage.getMessage());
+    @DisplayName("Negative check of creating courier")
+    @Description("Check correct status code (409) and error message when create new courier with existing login")
+    public void createCourierNegativeTestDoubleValues() {
+        courierRequests.createCourier(courier);
+        String actual = courierRequests.createCourier(courier)
+                .then().statusCode(409).extract().path("message").toString();
+        Assert.assertEquals("Этот логин уже используется. Попробуйте другой.", actual);;
     }
     @After
     public void deleteData () {
-        CourierRequests.deleteCourier(courier);
+        courierRequests.deleteCourier(courier);
     }
 }

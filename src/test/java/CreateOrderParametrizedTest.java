@@ -6,8 +6,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import services.OrderRequests;
-import testclasses.Order;
-import testclasses.OrderId;
+import pojo.Order;
+import pojo.OrderId;
 
 @RunWith(Parameterized.class)
 public class CreateOrderParametrizedTest {
@@ -52,7 +52,7 @@ public class CreateOrderParametrizedTest {
         String track = OrderRequests.createOrder(order)
                 .then().statusCode(201)
                 .extract().path("track").toString();
-        Assert.assertTrue(track != null);
+        Assert.assertNotNull(track);
         orderId.setTrack(track);
     }
     @After

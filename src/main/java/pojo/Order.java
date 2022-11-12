@@ -1,4 +1,4 @@
-package testclasses;
+package pojo;
 
 public class Order {
     private String firstName;

@@ -1,6 +1,9 @@
-package testclasses;
+package pojo;
 
 public class Courier {
+    private String login;
+    private String password;
+    private String firstName;
     public String getLogin() {
         return login;
     }
@@ -24,10 +27,6 @@ public class Courier {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-
-    private String login;
-    private String password;
-    private String firstName;
 
     public Courier(String login, String password, String firstName) {
         this.login = login;
